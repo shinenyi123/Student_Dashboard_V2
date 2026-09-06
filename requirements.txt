@@ -1,0 +1,11 @@
+flask
+Flask-Session
+SQLAlchemy
+psycopg2-binary
+python-dotenv
+gunicorn
+PyJWT
+requests
+pandas
+openpyxl
+python-dateutil
