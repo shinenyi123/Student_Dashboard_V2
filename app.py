@@ -2,8 +2,8 @@ import os
 
 from flask import Flask
 from flask_session import Session
+from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
 
 from models.student_model import create_table
 from routes.export_routes import export_bp
@@ -14,6 +14,8 @@ from routes.auth_routes import auth_bp
 
 
 load_dotenv()
+
+session_database = SQLAlchemy()
 
 
 def create_app():
@@ -26,11 +28,11 @@ def create_app():
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
     if not app.config['SECRET_KEY']:
         raise RuntimeError('SECRET_KEY must be set before starting the application')
+    app.config['SQLALCHEMY_DATABASE_URI'] = session_database_url
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    session_database.init_app(app)
     app.config['SESSION_TYPE'] = 'sqlalchemy'
-    app.config['SESSION_SQLALCHEMY'] = create_engine(
-        session_database_url,
-        pool_pre_ping=True,
-    )
+    app.config['SESSION_SQLALCHEMY'] = session_database
     app.config['SESSION_SQLALCHEMY_TABLE'] = 'flask_sessions'
     app.config['SESSION_PERMANENT'] = False
     app.config['SESSION_COOKIE_HTTPONLY'] = True
