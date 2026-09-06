@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Summary</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        {% include '_nav.html' %}
+
+        <main class="main">
+            <section class="table-panel summary-panel">
+                <form id="summary-filter-form" class="summary-filter-bar">
+                    <input type="date" name="date">
+                    <select name="grade">
+                        <option value="all">All grades</option>
+                    </select>
+                    <select name="class">
+                        <option value="all">All classes</option>
+                    </select>
+                    <select name="gender">
+                        <option value="all">Male &amp; Female</option>
+                        <option value="ကျား">Male</option>
+                        <option value="မ">Female</option>
+                    </select>
+                    <select name="age">
+                        <option value="all">All ages</option>
+                    </select>
+                    <input type="number" name="age_1" placeholder="Min">
+                    <input type="number" name="age_2" placeholder="Max">
+                    <button type="submit">Run</button>
+                </form>
+
+                <div class="summary-heading">
+                    <h1>Grade and Class Summary</h1>
+                    <div class="summary-actions">
+                        <input id="summary-file-name" type="text" placeholder="File Name">
+                        <button id="summary-download-button" type="button">Download Excel</button>
+                    </div>
+                </div>
+
+                <div class="table-container" id="summary-table-container">
+                    <div class="empty-state">
+                        <p>Loading summary...</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module" src="{{ url_for('static', filename='js/summary.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+
+</html>
