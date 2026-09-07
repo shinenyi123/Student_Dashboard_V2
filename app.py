@@ -25,9 +25,9 @@ def create_app():
         raise RuntimeError('DATABASE_URL must be set before starting the application')
     session_database_url = database_url.replace('postgres://', 'postgresql://', 1)
 
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+    app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY')
     if not app.config['SECRET_KEY']:
-        raise RuntimeError('SECRET_KEY must be set before starting the application')
+        raise RuntimeError('FLASK_SECRET_KEY must be set before starting the application')
     app.config['SQLALCHEMY_DATABASE_URI'] = session_database_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     session_database.init_app(app)
