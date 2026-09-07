@@ -1,5 +1,0 @@
-python_UI_student
-.env
-database/*.db
-__pycache__/
-**/__pycache__/
