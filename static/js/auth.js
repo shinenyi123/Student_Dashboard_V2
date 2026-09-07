@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#logout-button')?.addEventListener('click', async () => {
         try {
             const result = await postJson('/api/logout');
-            window.location.href = result.redirect || '/login';
+            window.location.href = result.redirect || '/';
         } catch (error) {
             window.alert(error.message);
         }
