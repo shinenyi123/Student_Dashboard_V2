@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in | Student Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="auth-page">
+    <main class="auth-card" aria-labelledby="auth-title">
+        <h1 id="auth-title">Log in to Student Dashboard</h1>
+        {% if error %}<p class="auth-error" role="alert">{{ error }}</p>{% endif %}
+        <form method="post" action="{{ url_for('auth.login') }}">
+            <label>Email <input name="email" type="email" required autocomplete="email"></label>
+            <label>Password <input name="password" type="password" required autocomplete="current-password"></label>
+            <button type="submit">Log in</button>
+        </form>
+        <p class="auth-links"><a href="{{ auth_service_url }}/forgot-password">Forgot Password?</a></p>
+    </main>
+</body>
+
+</html>

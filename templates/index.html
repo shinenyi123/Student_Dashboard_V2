@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        {% include '_nav.html' %}
+
+        <div class="main">
+            <div class="filter-panel">
+                <form id="filter-form">
+                    <input type="date" name="date" placeholder="Date(day-month-year)">
+                    <div class="age-inputs">
+                        <select name="age" id="age-select">
+                            <option value="">All ages</option>
+                        </select>
+                        <input type="number" name="age_1" placeholder="Min">
+                        <input type="number" name="age_2" placeholder="Max">
+                    </div>
+
+                    <select name="class">
+                        <option value="all">All classes</option>
+                    </select>
+
+                    <select name="grade">
+                        <option value="all">All grades</option>
+                    </select>
+
+                    <select name="gender">
+                        <option value="all">Male &amp; Female</option>
+                        <option value="ကျား">Male</option>
+                        <option value="မ">Female</option>
+                    </select>
+
+                    <button type="submit">Run</button>
+                    <hr>
+                    <select name="file_type">
+                        <option value="normal">Normal File</option>
+                        <option value="normalized">Normalized File</option>
+                    </select>
+                    <input type="text" name="school_name" placeholder="School Name">
+                    <input type="text" name="file_name" placeholder="File Name">
+                    <button id="download-button" type="button">Download Excel</button>
+                </form>
+            </div>
+
+            <div class="table-panel">
+                <div class="summary">
+                    <div class="box">All: <span id="data-all">0</span></div>
+                    <div class="box">Male: <span id="data-male">0</span></div>
+                    <div class="box">Female: <span id="data-female">0</span></div>
+                </div>
+
+                <div class="table-container" id="table-container">
+                    <div class="empty-state">
+                        <p>ကျောင်းသားဒေတာ မတွေ့ရှိပါ။</p>
+                        <p>Excel ဖိုင် Upload လုပ်ပေးပါ။</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-bar">
+            <form id="upload-form" enctype="multipart/form-data">
+                <input type="file" name="myfile" required>
+                <button type="submit" class="upload-button">Upload</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="{{ url_for('static', filename='js/api.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/filters.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/table.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,14 @@
+<div class="top-bar">
+    <span class="top-title">You Press The Button, We Do The Rest</span>
+    <nav class="page-nav" aria-label="Page navigation">
+        <a class="page-nav-link {% if request.path == '/' %}active{% endif %}" href="/">Dashboard</a>
+        <a class="page-nav-link {% if request.path == '/summary' %}active{% endif %}" href="/summary">Summary</a>
+        <a class="page-nav-link {% if request.path.startswith('/bug-check') %}active{% endif %}" href="/bug-check">Bug
+            Check</a>
+    </nav>
+    <div class="nav-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" type="button"><span class="theme-icon">🌙</span> Dark
+            Mode</button>
+        <button id="logout-button" class="logout-button" type="button">Log out</button>
+    </div>
+</div>

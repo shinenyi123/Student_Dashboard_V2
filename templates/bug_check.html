@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Check</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        {% include '_nav.html' %}
+        <main class="main">
+            <section class="table-panel bug-check-panel">
+                <div class="bug-check-heading">
+                    <h1>Excel Bug Check</h1>
+                    <p>Review and fix validation issues before importing student data.</p>
+                </div>
+                <div id="bug-check-results" class="bug-check-results"></div>
+            </section>
+        </main>
+    </div>
+    <script type="module" src="{{ url_for('static', filename='js/bug-check.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+
+</html>
