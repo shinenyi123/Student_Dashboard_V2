@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="auth-page">
+    <main class="auth-card" aria-labelledby="auth-title">
+        <h1 id="auth-title">Student Dashboard</h1>
+        <p class="auth-subtitle">Use the central account service to access this website.</p>
+        <p class="auth-links"><a href="{{ register_url }}">Register</a></p>
+        <p class="auth-links"><a href="{{ login_url }}">Login</a></p>
+        <p class="auth-links"><a href="{{ forgot_password_url }}">Forgot Password?</a></p>
+    </main>
+</body>
+
+</html>
