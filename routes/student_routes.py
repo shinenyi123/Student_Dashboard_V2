@@ -7,15 +7,22 @@ from models.student_model import (
     get_filtered_student_data,
     get_grade_class_summary,
 )
-from routes.auth_routes import login_required
+from oauth_client import auth_service_base_url, prepare_login_url
+from routes.auth_routes import current_auth_user, login_required
 
 
 student_bp = Blueprint('student', __name__)
 
 
 @student_bp.get('/')
-@login_required
 def home():
+    if not current_auth_user():
+        return render_template(
+            'landing.html',
+            login_url=prepare_login_url(),
+            register_url=f'{auth_service_base_url()}/signup',
+            forgot_password_url=f'{auth_service_base_url()}/forgot-password',
+        )
     return render_template('index.html')
 
 
