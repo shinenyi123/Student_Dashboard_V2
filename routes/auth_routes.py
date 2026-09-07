@@ -1,12 +1,45 @@
 from functools import wraps
 
-import requests
 from flask import Blueprint, jsonify, redirect, render_template, request, session, url_for
+from werkzeug.security import check_password_hash
 
-from auth_client import auth_service_base_url, authenticate_user
+from auth_client import auth_service_base_url
+from models.student_model import get_database_connection, release_database_connection
 
 
 auth_bp = Blueprint('auth', __name__)
+
+
+def get_user_for_login(email):
+    normalized_email = (email or '').strip().lower()
+    if not normalized_email:
+        return None
+    conn = get_database_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            'SELECT id, email, password_hash, is_verified FROM users WHERE email = %s',
+            (normalized_email,),
+        )
+        return cursor.fetchone()
+    finally:
+        release_database_connection(conn)
+
+
+def is_student_dashboard_authorized(user_id):
+    conn = get_database_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            '''SELECT 1
+               FROM user_websites uw
+               JOIN websites w ON w.id = uw.website_id
+               WHERE uw.user_id = %s AND w.slug = %s''',
+            (user_id, 'student-dashboard'),
+        )
+        return cursor.fetchone() is not None
+    finally:
+        release_database_connection(conn)
 
 
 @auth_bp.get('/health')
@@ -40,19 +73,23 @@ def login():
             return redirect(url_for('student.home'))
         return render_template('login.html', auth_service_url=auth_service_base_url())
 
-    email = request.form.get('email', '')
+    email = (request.form.get('email', '') or '').strip()
     password = request.form.get('password', '')
-    try:
-        result = authenticate_user(email, password)
-    except (requests.RequestException, ValueError, RuntimeError):
-        return render_template('login.html', auth_service_url=auth_service_base_url(), error='Unable to contact the authentication service.'), 502
-    if not result.get('success'):
-        return render_template('login.html', auth_service_url=auth_service_base_url(), error=result.get('error', 'Invalid email or password.')), result.get('status', 401)
 
-    user = result['user']
+    user = get_user_for_login(email)
+    if not user:
+        return render_template('login.html', auth_service_url=auth_service_base_url(), error='Invalid email or password.'), 401
+
+    user_id, user_email, password_hash, is_verified = user
+    if not is_verified or not password_hash or not check_password_hash(password_hash, password):
+        return render_template('login.html', auth_service_url=auth_service_base_url(), error='Invalid email or password.'), 401
+
+    if not is_student_dashboard_authorized(user_id):
+        return render_template('login.html', auth_service_url=auth_service_base_url(), error='Invalid email or password.'), 403
+
     session.clear()
-    session['user_id'] = user['id']
-    session['email'] = user['email']
+    session['user_id'] = user_id
+    session['email'] = user_email
     return redirect(url_for('student.home'))
 
 
