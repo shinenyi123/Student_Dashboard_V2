@@ -16,7 +16,7 @@ def _required(name):
 
 
 def auth_service_base_url():
-    return os.environ.get('AUTH_SERVICE_BASE_URL', 'https://auth-service-kaef.onrender.com').rstrip('/')
+    return _required('AUTH_SERVICE_URL').rstrip('/')
 
 
 def oauth_client_id():
@@ -57,18 +57,24 @@ def exchange_code(code):
 
 
 def store_tokens(tokens, claims):
-    session['user_id'] = str(claims['sub'])
-    session['email'] = claims['email']
-    session['access_token'] = tokens['access_token']
+    session['auth_user'] = {
+        key: claims[key]
+        for key in ('sub', 'email', 'iat', 'exp', 'aud')
+        if key in claims
+    }
     session['refresh_token'] = tokens['refresh_token']
-    session['access_token_expires_at'] = int(time.time()) + int(tokens.get('expires_in', 1800))
+    session['access_token_expires_at'] = int(claims['exp'])
 
 
 def validate_access_token(access_token):
     jwks_client = PyJWKClient(f'{auth_service_base_url()}/.well-known/jwks.json')
     signing_key = jwks_client.get_signing_key_from_jwt(access_token)
     claims = jwt.decode(
-        access_token, signing_key.key, algorithms=['RS256'], audience=oauth_client_id(),
+        access_token,
+        signing_key.key,
+        algorithms=['RS256'],
+        audience=oauth_client_id(),
+        options={'require': ['exp', 'iat', 'sub', 'aud']},
     )
     if not claims.get('sub') or not claims.get('email'):
         raise ValueError('Auth service token did not contain an identity.')
@@ -89,10 +95,8 @@ def refresh_session_tokens():
     )
     response.raise_for_status()
     tokens = response.json()
+    if not tokens.get('access_token') or not tokens.get('refresh_token'):
+        raise ValueError('Auth service returned an incomplete refresh response.')
     claims = validate_access_token(tokens['access_token'])
-    session['user_id'] = str(claims['sub'])
-    session['email'] = claims['email']
-    session['access_token'] = tokens['access_token']
-    session['refresh_token'] = tokens['refresh_token']
-    session['access_token_expires_at'] = int(time.time()) + int(tokens.get('expires_in', 1800))
+    store_tokens(tokens, claims)
     return True
