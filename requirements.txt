@@ -1,12 +1,13 @@
 flask
 Flask-Session
+Flask-SQLAlchemy
 SQLAlchemy
 psycopg2-binary
 python-dotenv
 gunicorn
 PyJWT
+cryptography
 requests
 pandas
 openpyxl
 python-dateutil
-Flask-SQLAlchemy
