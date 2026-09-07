@@ -1,4 +1,5 @@
 import os
+import secrets
 import time
 from urllib.parse import urlencode
 
@@ -31,6 +32,12 @@ def build_auth_url(state):
     return f'{auth_service_base_url()}/login?' + urlencode({
         'client_id': oauth_client_id(), 'redirect_uri': oauth_redirect_uri(), 'state': state,
     })
+
+
+def prepare_login_url():
+    state = secrets.token_urlsafe(32)
+    session['oauth_state'] = state
+    return build_auth_url(state)
 
 
 def build_signup_url(state):
