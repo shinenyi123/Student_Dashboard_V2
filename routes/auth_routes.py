@@ -7,10 +7,8 @@ import requests
 from flask import Blueprint, current_app, jsonify, redirect, request, session, url_for
 
 from oauth_client import (
-    auth_service_base_url,
-    build_auth_url,
-    build_signup_url,
     exchange_code,
+    prepare_login_url,
     refresh_session_tokens,
     store_tokens,
     validate_access_token,
@@ -43,7 +41,7 @@ def login_required(view):
                 return view(*args, **kwargs)
         if request.path.startswith('/api/') or request.is_json:
             return jsonify({'error': 'Authentication required.'}), 401
-        return redirect(url_for('auth.login_page', next=request.path))
+        return redirect(url_for('student.home'))
     return wrapped
 
 
@@ -52,25 +50,6 @@ def current_auth_user():
     if not isinstance(user, dict) or not user.get('sub') or not user.get('email'):
         return None
     return user
-
-
-@auth_bp.get('/auth/login')
-def login_page():
-    state = secrets.token_urlsafe(32)
-    session['oauth_state'] = state
-    return redirect(build_auth_url(state))
-
-
-@auth_bp.get('/signup')
-def signup_page():
-    state = secrets.token_urlsafe(32)
-    session['oauth_state'] = state
-    return redirect(build_signup_url(state))
-
-
-@auth_bp.get('/forgot-password')
-def forgot_password_page():
-    return redirect(f'{auth_service_base_url()}/forgot-password')
 
 
 @auth_bp.get('/auth/callback')
@@ -97,5 +76,5 @@ def auth_callback():
 def logout():
     session.clear()
     if request.path == '/api/logout' or request.is_json:
-        return jsonify({'message': 'Logged out.', 'redirect': '/auth/login'})
-    return redirect(url_for('auth.login_page'))
+        return jsonify({'message': 'Logged out.', 'redirect': '/'})
+    return redirect('/')
