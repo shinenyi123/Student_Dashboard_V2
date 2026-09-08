@@ -6,19 +6,325 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log in | Student Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background:
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.18), transparent 30%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.18), transparent 30%),
+                linear-gradient(135deg, #f8fafc, #eef2ff);
+
+            color: #172033;
+            padding: 24px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 430px;
+
+            padding: 42px 38px;
+
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 24px;
+
+            box-shadow:
+                0 25px 60px rgba(30, 41, 59, 0.12),
+                0 8px 25px rgba(99, 102, 241, 0.08);
+
+            animation: cardAppear 0.5s ease;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(18px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .auth-card h1 {
+            margin: 0 0 30px;
+            text-align: center;
+
+            font-size: 28px;
+            line-height: 1.25;
+            font-weight: 750;
+            letter-spacing: -0.6px;
+
+            color: #111827;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        form label {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            font-size: 14px;
+            font-weight: 650;
+            color: #374151;
+        }
+
+        form input {
+            width: 100%;
+            height: 50px;
+
+            padding: 0 15px;
+
+            border: 1px solid #d7dce5;
+            border-radius: 12px;
+
+            outline: none;
+
+            background: rgba(255, 255, 255, 0.9);
+            color: #111827;
+
+            font-size: 15px;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        form input::placeholder {
+            color: #9ca3af;
+        }
+
+        form input:hover {
+            border-color: #aeb7c8;
+        }
+
+        form input:focus {
+            border-color: #6366f1;
+
+            box-shadow:
+                0 0 0 4px rgba(99, 102, 241, 0.12);
+
+            transform: translateY(-1px);
+        }
+
+        form button {
+            height: 50px;
+
+            margin-top: 5px;
+
+            border: none;
+            border-radius: 12px;
+
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+
+            font-size: 15px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 18px rgba(79, 70, 229, 0.25);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                filter 0.2s ease;
+        }
+
+        form button:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 24px rgba(79, 70, 229, 0.3);
+
+            filter: brightness(1.03);
+        }
+
+        form button:active {
+            transform: translateY(0);
+        }
+
+        .auth-error {
+            margin: 0 0 20px;
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+
+            color: #dc2626;
+
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .auth-links {
+            margin: 18px 0 0;
+            text-align: center;
+        }
+
+        .auth-links+.auth-links {
+            margin-top: 10px;
+        }
+
+        .auth-links a {
+            color: #4f46e5;
+            text-decoration: none;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            transition: color 0.2s ease;
+        }
+
+        .auth-links a:hover {
+            color: #3730a3;
+            text-decoration: underline;
+        }
+
+        /* Mobile */
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+
+            .auth-card {
+                padding: 32px 24px;
+                border-radius: 20px;
+            }
+
+            .auth-card h1 {
+                font-size: 24px;
+                margin-bottom: 25px;
+            }
+        }
+
+        /* Dark mode */
+        html[data-theme="dark"] body {
+            background:
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.16), transparent 30%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.12), transparent 30%),
+                #0f172a;
+
+            color: #e5e7eb;
+        }
+
+        html[data-theme="dark"] .auth-card {
+            background: rgba(15, 23, 42, 0.82);
+            border-color: rgba(255, 255, 255, 0.08);
+
+            box-shadow:
+                0 25px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        html[data-theme="dark"] .auth-card h1 {
+            color: #f8fafc;
+        }
+
+        html[data-theme="dark"] form label {
+            color: #cbd5e1;
+        }
+
+        html[data-theme="dark"] form input {
+            background: rgba(30, 41, 59, 0.85);
+            border-color: #334155;
+            color: #f8fafc;
+        }
+
+        html[data-theme="dark"] form input:hover {
+            border-color: #475569;
+        }
+
+        html[data-theme="dark"] form input:focus {
+            border-color: #818cf8;
+            box-shadow:
+                0 0 0 4px rgba(129, 140, 248, 0.12);
+        }
+
+        html[data-theme="dark"] .auth-error {
+            background: rgba(127, 29, 29, 0.25);
+            border-color: rgba(248, 113, 113, 0.25);
+            color: #fca5a5;
+        }
+
+        html[data-theme="dark"] .auth-links a {
+            color: #a5b4fc;
+        }
+
+        html[data-theme="dark"] .auth-links a:hover {
+            color: #c7d2fe;
+        }
+    </style>
 </head>
 
 <body class="auth-page">
     <main class="auth-card" aria-labelledby="auth-title">
+
         <h1 id="auth-title">Log in to Student Dashboard</h1>
-        {% if error %}<p class="auth-error" role="alert">{{ error }}</p>{% endif %}
+
+        {% if error %}
+        <p class="auth-error" role="alert">{{ error }}</p>
+        {% endif %}
+
         <form method="post" action="{{ url_for('auth.login') }}">
-            <label>Email <input name="email" type="email" required autocomplete="email"></label>
-            <label>Password <input name="password" type="password" required autocomplete="current-password"></label>
+
+            <label>
+                Email
+                <input name="email" type="email" required autocomplete="email" placeholder="Enter your email">
+            </label>
+
+            <label>
+                Password
+                <input name="password" type="password" required autocomplete="current-password"
+                    placeholder="Enter your password">
+            </label>
+
             <button type="submit">Log in</button>
+
         </form>
-        <p class="auth-links"><a href="{{ auth_service_url }}/signup">Register</a></p>
-        <p class="auth-links"><a href="{{ auth_service_url }}/forgot-password">Forgot Password?</a></p>
+
+        <p class="auth-links">
+            <a href="{{ auth_service_url }}/signup">Register</a>
+        </p>
+
+        <p class="auth-links">
+            <a href="{{ auth_service_url }}/forgot-password">
+                Forgot Password?
+            </a>
+        </p>
+
     </main>
 </body>
 
