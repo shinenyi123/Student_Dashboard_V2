@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 
@@ -6,16 +7,313 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 24px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            color: #172033;
+
+            background:
+                radial-gradient(
+                    circle at 10% 20%,
+                    rgba(99, 102, 241, 0.18),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 80%,
+                    rgba(59, 130, 246, 0.18),
+                    transparent 30%
+                ),
+                linear-gradient(135deg, #f8fafc, #eef2ff);
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 430px;
+
+            padding: 44px 38px;
+
+            text-align: center;
+
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 24px;
+
+            box-shadow:
+                0 25px 60px rgba(30, 41, 59, 0.12),
+                0 8px 25px rgba(99, 102, 241, 0.08);
+
+            animation: cardAppear 0.5s ease;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(18px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .auth-card h1 {
+            margin: 0 0 12px;
+
+            font-size: 31px;
+            line-height: 1.2;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+
+            color: #111827;
+        }
+
+        .auth-subtitle {
+            margin: 0 auto 30px;
+
+            max-width: 330px;
+
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .auth-links {
+            margin: 12px 0;
+        }
+
+        .auth-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 100%;
+            min-height: 50px;
+
+            padding: 12px 18px;
+
+            border-radius: 12px;
+
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #d7dce5;
+
+            color: #4f46e5;
+            text-decoration: none;
+
+            font-size: 15px;
+            font-weight: 650;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .auth-links a:hover {
+            transform: translateY(-2px);
+
+            border-color: #a5b4fc;
+
+            background: #f8f7ff;
+
+            box-shadow:
+                0 8px 20px rgba(79, 70, 229, 0.12);
+        }
+
+        .auth-links a:active {
+            transform: translateY(0);
+        }
+
+        /* First button - Register */
+        .auth-links:first-of-type a {
+            color: white;
+            border-color: transparent;
+
+            background: linear-gradient(
+                135deg,
+                #6366f1,
+                #4f46e5
+            );
+
+            box-shadow:
+                0 8px 18px rgba(79, 70, 229, 0.25);
+        }
+
+        .auth-links:first-of-type a:hover {
+            background: linear-gradient(
+                135deg,
+                #4f46e5,
+                #4338ca
+            );
+
+            box-shadow:
+                0 12px 24px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Forgot password */
+        .auth-links:last-of-type {
+            margin-top: 18px;
+        }
+
+        .auth-links:last-of-type a {
+            min-height: auto;
+
+            padding: 5px;
+
+            background: transparent;
+            border: none;
+
+            box-shadow: none;
+
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .auth-links:last-of-type a:hover {
+            transform: none;
+
+            background: transparent;
+            box-shadow: none;
+
+            color: #3730a3;
+            text-decoration: underline;
+        }
+
+        /* Mobile */
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+
+            .auth-card {
+                padding: 35px 24px;
+                border-radius: 20px;
+            }
+
+            .auth-card h1 {
+                font-size: 27px;
+            }
+
+            .auth-subtitle {
+                margin-bottom: 25px;
+            }
+        }
+
+        /* Dark mode */
+        html[data-theme="dark"] body {
+            color: #e5e7eb;
+
+            background:
+                radial-gradient(
+                    circle at 10% 20%,
+                    rgba(99, 102, 241, 0.16),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 80%,
+                    rgba(59, 130, 246, 0.12),
+                    transparent 30%
+                ),
+                #0f172a;
+        }
+
+        html[data-theme="dark"] .auth-card {
+            background: rgba(15, 23, 42, 0.82);
+            border-color: rgba(255, 255, 255, 0.08);
+
+            box-shadow:
+                0 25px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        html[data-theme="dark"] .auth-card h1 {
+            color: #f8fafc;
+        }
+
+        html[data-theme="dark"] .auth-subtitle {
+            color: #94a3b8;
+        }
+
+        html[data-theme="dark"] .auth-links a {
+            background: rgba(30, 41, 59, 0.85);
+            border-color: #334155;
+            color: #a5b4fc;
+        }
+
+        html[data-theme="dark"] .auth-links a:hover {
+            background: rgba(51, 65, 85, 0.8);
+            border-color: #6366f1;
+        }
+
+        html[data-theme="dark"] .auth-links:first-of-type a {
+            background: linear-gradient(
+                135deg,
+                #6366f1,
+                #4f46e5
+            );
+
+            border-color: transparent;
+            color: white;
+        }
+
+        html[data-theme="dark"] .auth-links:last-of-type a {
+            background: transparent;
+            border: none;
+        }
+    </style>
 </head>
 
 <body class="auth-page">
+
     <main class="auth-card" aria-labelledby="auth-title">
+
         <h1 id="auth-title">Student Dashboard</h1>
-        <p class="auth-subtitle">Use the central account service to access this website.</p>
-        <p class="auth-links"><a href="{{ register_url }}">Register</a></p>
-        <p class="auth-links"><a href="/auth/login">Login</a></p>
-        <p class="auth-links"><a href="{{ forgot_password_url }}">Forgot Password?</a></p>
+
+        <p class="auth-subtitle">
+            Use the central account service to access this website.
+        </p>
+
+        <p class="auth-links">
+            <a href="{{ register_url }}">Register</a>
+        </p>
+
+        <p class="auth-links">
+            <a href="/auth/login">Login</a>
+        </p>
+
+        <p class="auth-links">
+            <a href="{{ forgot_password_url }}">
+                Forgot Password?
+            </a>
+        </p>
+
     </main>
+
 </body>
 
 </html>
+```
