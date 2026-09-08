@@ -26,22 +26,6 @@ def get_user_for_login(email):
         release_database_connection(conn)
 
 
-def is_student_dashboard_authorized(user_id):
-    conn = get_database_connection()
-    try:
-        cursor = conn.cursor()
-        cursor.execute(
-            '''SELECT 1
-               FROM user_websites uw
-               JOIN websites w ON w.id = uw.website_id
-               WHERE uw.user_id = %s AND w.slug = %s''',
-            (user_id, 'student-dashboard'),
-        )
-        return cursor.fetchone() is not None
-    finally:
-        release_database_connection(conn)
-
-
 @auth_bp.get('/health')
 def health():
     return jsonify({'status': 'ok'})
@@ -83,9 +67,6 @@ def login():
     user_id, user_email, password_hash, is_verified = user
     if not is_verified or not password_hash or not check_password_hash(password_hash, password):
         return render_template('login.html', auth_service_url=auth_service_base_url(), error='Invalid email or password.'), 401
-
-    if not is_student_dashboard_authorized(user_id):
-        return render_template('login.html', auth_service_url=auth_service_base_url(), error='Invalid email or password.'), 403
 
     session.clear()
     session['user_id'] = user_id
